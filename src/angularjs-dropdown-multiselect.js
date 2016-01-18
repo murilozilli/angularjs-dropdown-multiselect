@@ -56,7 +56,7 @@ directiveModule.directive('ngDropdownMultiselect', ['$filter', '$document', '$co
             },
             link: function ($scope, $element, $attrs) {
                 var $dropdownTrigger = $element.children()[0];
-                
+
                 $scope.toggleDropdown = function () {
                     $scope.open = !$scope.open;
                 };
@@ -219,6 +219,15 @@ directiveModule.directive('ngDropdownMultiselect', ['$filter', '$document', '$co
                 $scope.getPropertyForObject = function (object, property) {
                     if (angular.isDefined(object) && object.hasOwnProperty(property)) {
                         return object[property];
+                    } else if (property.indexOf('.') > -1) {
+                        var associatedObjectName = property.substr(0, property.indexOf('.'));
+                        if (object.hasOwnProperty(associatedObjectName)) {
+                            var associatedObject = object[associatedObjectName];
+                            var associatedObjectProperty = property.substr(property.indexOf('.')+1);
+                            if (angular.isDefined(associatedObject) && associatedObject.hasOwnProperty(associatedObjectProperty)) {
+                                return associatedObject[associatedObjectProperty];
+                            }
+                        }
                     }
 
                     return '';
